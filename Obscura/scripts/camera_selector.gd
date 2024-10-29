@@ -24,6 +24,7 @@ func _process(_delta):
 			if null != cameras[index]:
 				if index == current_controller:
 					cameras[current_controller].make_current()
+					cameras[current_controller].draw_camera_logic = true
 				else:
 					cameras[index].current = false
 					cameras[index].draw_camera_logic = false
