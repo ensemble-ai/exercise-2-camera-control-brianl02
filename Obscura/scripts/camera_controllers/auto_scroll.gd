@@ -38,8 +38,10 @@ func _process(delta: float) -> void:
 	if diff_between_bottom_edges < 0:
 		target.global_position.z -= diff_between_bottom_edges
 	
-	var travel_distance = delta * autoscroll_speed.x  
-	global_position.x += travel_distance
+	var travel_distance = delta * autoscroll_speed  
+	global_position.x += travel_distance.x
+	global_position.y += travel_distance.y
+	global_position.z += travel_distance.z
 	
 	super(delta)
 		
