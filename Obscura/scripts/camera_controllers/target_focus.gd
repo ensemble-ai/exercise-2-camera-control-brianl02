@@ -1,17 +1,21 @@
-class_name LerpSmoothing1
+class_name TargetFocus
 extends CameraControllerBase
 
-@export var follow_speed:float
+@export var lead_speed:float
+@export var catchup_delay_duration:float
 @export var catchup_speed:float
 @export var leash_distance:float
-var rng = RandomNumberGenerator.new()
+
+@onready var time_passed:float = 0
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	super()
 	position = target.position
 
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:	
+func _process(delta: float) -> void:
 	if !current:
 		return
 	
@@ -22,31 +26,57 @@ func _process(delta: float) -> void:
 	var cpos = global_position
 	
 	var distance = Vector2(tpos.x - cpos.x, tpos.z - cpos.z)
-	var direction:Vector2 = distance.normalized()
+	var catchup_direction:Vector2 = distance.normalized()
+	var input_direction = Vector2(target.velocity.normalized().x, 
+									target.velocity.normalized().z)
 	var movement = Vector2(0,0)
-	print(distance.length())
+	
+	#if distance.length() <= leash_distance:
+		#movement = input_direction * lead_speed
+		#global_position.x += movement.x * delta
+		#global_position.z += movement.y * delta
+	#elif distance.length() > leash_distance:
+		#movement = input_direction * target.velocity.length()
+		#global_position.x += movement.x * delta
+		#global_position.z += movement.y * delta
+	#if (is_equal_approx(target.velocity.length(),0)):
+		#if (time_passed < catchup_delay_duration):
+			#time_passed += delta
+		#elif (time_passed >= catchup_delay_duration):
+			#movement = catchup_direction * catchup_speed
+			#global_position.x += movement.x * delta
+			#global_position.z += movement.y * delta
+		#if round(distance.length()) == 0:
+			#global_position.x = target.global_position.x
+			#global_position.z = target.global_position.z
+			#time_passed = 0
 
-	if is_equal_approx(target.velocity.length(),0) && round(distance.length()) != 0:
-		movement = direction * catchup_speed
-		global_position.x += movement.x * delta
-		global_position.z += movement.y * delta
-	elif !is_equal_approx(target.velocity.length(),0) && round(distance.length()) != 0:
+	
+	if is_equal_approx(target.velocity.length(),0):
+		print("stopped")
+		if (time_passed < catchup_delay_duration):
+			time_passed += delta
+		elif (time_passed >= catchup_delay_duration):
+			movement = catchup_direction * catchup_speed
+			global_position.x += movement.x * delta
+			global_position.z += movement.y * delta
+		if round(distance.length()) == 0:
+			global_position.x = target.global_position.x
+			global_position.z = target.global_position.z
+			time_passed = 0
+	else:
+		print("moving")
 		if distance.length() <= leash_distance:
-			print("less")
-			movement = direction * follow_speed
+			movement = input_direction * lead_speed
 			global_position.x += movement.x * delta
 			global_position.z += movement.y * delta
 		elif distance.length() > leash_distance:
-			print("equal")
-			movement = direction * target.velocity.length()
+			movement = input_direction * target.velocity.length()
 			global_position.x += movement.x * delta
 			global_position.z += movement.y * delta
-	else:
-		global_position.x = target.global_position.x
-		global_position.z = target.global_position.z
-			
+		
 	super(delta)
-
+	
 func draw_logic() -> void:
 	var mesh_instance := MeshInstance3D.new()
 	var immediate_mesh := ImmediateMesh.new()
