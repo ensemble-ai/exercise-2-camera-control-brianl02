@@ -23,6 +23,8 @@ func _process(delta: float) -> void:
 	if (tpos.z != cpos.z) :
 		global_position.z = tpos.z
 		
+	print(target.global_position, global_position)
+		
 	super(delta)
 	
 func draw_logic() -> void:

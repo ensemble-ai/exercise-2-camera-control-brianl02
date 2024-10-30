@@ -43,6 +43,7 @@ func _process(delta: float) -> void:
 	global_position.y += travel_distance.y
 	global_position.z += travel_distance.z
 	
+	
 	super(delta)
 		
 func draw_logic() -> void:
