@@ -78,7 +78,7 @@ func _process(delta: float) -> void:
 						global_position.x = tpos.x + movement.x
 						global_position.z = tpos.z + movement.y
 					else:
-						movement = (catchup_direction + input_direction).normalized() * (lead_speed)
+						movement = (catchup_direction + input_direction).normalized() * (lead_speed) * 0.5
 						global_position.x += movement.x * delta
 						global_position.z += movement.y * delta
 				else:
