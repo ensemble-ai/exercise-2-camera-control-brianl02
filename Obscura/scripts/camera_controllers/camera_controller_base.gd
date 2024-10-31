@@ -9,6 +9,8 @@ extends Camera3D
 @export var max_zoom:float = 100.0
 @export var draw_camera_logic:bool = true
 
+var just_switched:bool = false
+
 #camera tilt around the z axis in radians
 #var _camera_tilt_rad:float = 0.0
 #var _camera_tilt_speed:float = 0.1

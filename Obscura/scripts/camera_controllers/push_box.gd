@@ -20,6 +20,11 @@ func _process(delta: float) -> void:
 	if draw_camera_logic:
 		draw_logic()
 	
+	if just_switched:
+		global_position.x = target.global_position.x
+		global_position.z = target.global_position.z
+		just_switched = false
+	
 	var tpos = target.global_position
 	var cpos = global_position
 	
