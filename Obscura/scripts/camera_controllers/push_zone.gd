@@ -35,11 +35,13 @@ func _process(delta: float) -> void:
 	var input_direction = Vector2(target.velocity.normalized().x, target.velocity.normalized().z)
 	var movement = Vector2(0,0)
 	
+	# variables used to check if vessel is in speedup zone
 	var diff_between_left_edges_speedup = (tpos.x - target.WIDTH / 2.0) - (cpos.x + speedup_zone_top_left.x)
 	var diff_between_right_edges_speedup = (tpos.x + target.WIDTH / 2.0) - (cpos.x + speedup_zone_bottom_right.x)
 	var diff_between_top_edges_speedup = (tpos.z + target.HEIGHT / 2.0) - (cpos.z + speedup_zone_top_left.y)
 	var diff_between_bottom_edges_speedup = (tpos.z - target.HEIGHT / 2.0) - (cpos.z - speedup_zone_top_left.y)
 	
+	# variables used to check if vessel is touching edge of push box
 	var diff_between_left_edges_pushbox = (tpos.x - target.WIDTH / 2.0) - (cpos.x + pushbox_top_left.x)
 	var diff_between_right_edges_pushbox = (tpos.x + target.WIDTH / 2.0) - (cpos.x + pushbox_bottom_right.x)
 	var diff_between_top_edges_pushbox = (tpos.z + target.HEIGHT / 2.0) - (cpos.z + pushbox_top_left.y)
