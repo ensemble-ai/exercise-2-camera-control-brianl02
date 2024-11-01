@@ -48,9 +48,8 @@ func _process(delta: float) -> void:
 	var diff_between_top_edges_pushbox = (tpos.z + target.HEIGHT / 2.0) - (cpos.z + pushbox_top_left.y)
 	var diff_between_bottom_edges_pushbox = (tpos.z - target.HEIGHT / 2.0) - (cpos.z - pushbox_top_left.y)
 	
-	
-	
-	if (diff_between_left_edges_speedup < 0 || diff_between_right_edges_speedup > 0 || diff_between_top_edges_speedup > 0 || diff_between_bottom_edges_speedup < 0):
+	if (diff_between_left_edges_speedup < 0 || diff_between_right_edges_speedup > 0 
+		|| diff_between_top_edges_speedup > 0 || diff_between_bottom_edges_speedup < 0):
 	# if vessel is in the speedup zone, set its velocity to vessel speed * push ratio in direction of vessel movement
 		movement = input_direction * target.velocity.length() * push_ratio
 		
@@ -90,6 +89,7 @@ func _process(delta: float) -> void:
 	global_position.z += movement.y * delta
 	
 	super(delta)
+
 
 func draw_logic() -> void:
 	var mesh_instance := MeshInstance3D.new()

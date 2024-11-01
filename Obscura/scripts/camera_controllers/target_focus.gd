@@ -14,6 +14,7 @@ func _ready() -> void:
 	super()
 	position = target.position
 
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if !current:  # process only runs when camera is selected
@@ -87,9 +88,6 @@ func _process(delta: float) -> void:
 				# if camera position is right the two should be pointing in exact opposite directions
 				# use is_equal_approx because float values may not exactly match up
 				# reset camera to correct spot
-					#movement = (catchup_direction + input_direction).normalized() * (lead_speed) *0.5
-					#global_position.x += movement.x * delta
-					#global_position.z += movement.y * delta
 					movement = input_direction * leash_distance
 					global_position.x = tpos.x + movement.x
 					global_position.z = tpos.z + movement.y
@@ -100,8 +98,7 @@ func _process(delta: float) -> void:
 					movement = input_direction * target.velocity.length()
 					global_position.x += movement.x * delta
 					global_position.z += movement.y * delta
-				
-		
+					
 	super(delta)
 	
 func draw_logic() -> void:
