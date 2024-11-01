@@ -11,15 +11,16 @@ func _ready() -> void:
 	super()
 	position = target.position
 
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if !current:
+	if !current: # process only runs when camera is selected
 		return
 	
-	if draw_camera_logic:
+	if draw_camera_logic: 
 		draw_logic()
 	
-	if just_switched:
+	if just_switched: # centers camera on vessel after you toggle to it 
 		global_position.x = target.global_position.x
 		global_position.z = target.global_position.z
 		just_switched = false
@@ -28,21 +29,30 @@ func _process(delta: float) -> void:
 	var cpos = global_position
 	
 	var diff_between_left_edges = (tpos.x - target.WIDTH / 2.0) - (cpos.x + top_left.x)
-	if diff_between_left_edges < 0:
+	
+	if diff_between_left_edges < 0: 
+	# if vessel touching box's left edge, push it along autoscroll's path
 		target.global_position.x -= diff_between_left_edges
 	
 	var diff_between_right_edges = (tpos.x + target.WIDTH / 2.0) - (cpos.x + bottom_right.x)
+	
 	if diff_between_right_edges > 0:
+	# if vessel trying to leave box from right edge, stop it from leaving
 		target.global_position.x -= diff_between_right_edges
 	
 	var diff_between_top_edges = (tpos.z + target.HEIGHT / 2.0) - (cpos.z + top_left.y)
+	
 	if diff_between_top_edges > 0:
+	# if vessel trying to leave box from top edge, stop it from leaving
 		target.global_position.z -= diff_between_top_edges
 	
 	var diff_between_bottom_edges = (tpos.z - target.HEIGHT / 2.0) - (cpos.z - top_left.y)
+	
 	if diff_between_bottom_edges < 0:
+	# if vessel trying to leave box from bottom edge, stop it from leaving
 		target.global_position.z -= diff_between_bottom_edges
 	
+	# move camera at autoscroll speed
 	var travel_distance = delta * autoscroll_speed  
 	global_position.x += travel_distance.x
 	global_position.y += travel_distance.y
@@ -50,6 +60,7 @@ func _process(delta: float) -> void:
 	
 	
 	super(delta)
+		
 		
 func draw_logic() -> void:
 	var mesh_instance := MeshInstance3D.new()
