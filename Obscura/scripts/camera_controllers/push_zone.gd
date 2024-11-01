@@ -33,6 +33,7 @@ func _process(delta: float) -> void:
 	
 	# use normal vector of vessel velocity to extract direction of vessel movement
 	var input_direction = Vector2(target.velocity.normalized().x, target.velocity.normalized().z)
+	var camera_to_vessel = Vector2(tpos.x - cpos.x, tpos.z - cpos.z).normalized()
 	var movement = Vector2(0,0)
 	
 	# variables used to check if vessel is in speedup zone
@@ -47,10 +48,23 @@ func _process(delta: float) -> void:
 	var diff_between_top_edges_pushbox = (tpos.z + target.HEIGHT / 2.0) - (cpos.z + pushbox_top_left.y)
 	var diff_between_bottom_edges_pushbox = (tpos.z - target.HEIGHT / 2.0) - (cpos.z - pushbox_top_left.y)
 	
+	
+	
 	if (diff_between_left_edges_speedup < 0 || diff_between_right_edges_speedup > 0 || diff_between_top_edges_speedup > 0 || diff_between_bottom_edges_speedup < 0):
 	# if vessel is in the speedup zone, set its velocity to vessel speed * push ratio in direction of vessel movement
 		movement = input_direction * target.velocity.length() * push_ratio
 		
+		# check to see if vessel isn't moving towards edges of push box
+		# if vessel is heading back towards center of camera, do not move camera
+		if diff_between_left_edges_speedup < 0 && input_direction.x > 0:
+			movement.x = 0
+		if diff_between_right_edges_speedup > 0 && input_direction.x < 0:
+			movement.x = 0
+		if diff_between_top_edges_speedup > 0 && input_direction.y < 0:
+			movement.y = 0
+		if diff_between_bottom_edges_speedup <0 && input_direction.y > 0:
+			movement.y = 0
+	
 	if (diff_between_left_edges_pushbox <= 0):
 	# if vessel touching left edge of pushbox, move camera in x direction at vessel's x velocity
 	# accomplish by detecting if vessel has left box from left side and then moving camera to vessel's postion

@@ -14,7 +14,6 @@ func _ready() -> void:
 	super()
 	position = target.position
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if !current:  # process only runs when camera is selected
@@ -79,38 +78,22 @@ func _process(delta: float) -> void:
 				
 			elif distance.length() >= leash_distance:
 			# camera has reached maximum distance 
-			
+
 				if (!is_equal_approx(catchup_direction.x,-1*input_direction.x) || !is_equal_approx(catchup_direction.y,-1*input_direction.y)):
 				# if the camera is NOT in front of the vessel in the direction of its movement
 				# sometimes camera is already at leash distance, but vessel changes direction w/o stopping
 				# this if statement makes it so camera will shift position when this happens
-				# use catchup_direction and input_direction vectors
+				# use catchup_direction and input_direction vectors to check
 				# if camera position is right the two should be pointing in exact opposite directions
 				# use is_equal_approx because float values may not exactly match up
-				
-				
-					if (abs(abs(catchup_direction.x)-abs(input_direction.x)) <= 0.4) || (abs(abs(catchup_direction.y)-abs(input_direction.x)) <= 0.4) :
-					# if camera is close enough to its appropriate position
-					# directly set its position to the correct spot
-					# check this by comparing catchup_direction and input_direction
-					# see if they are almost the exact same vector
-					# do this because float values not exact 
-					# code will continue adjusting camera position even when it is in the right spot
-					# forcing camera to "lock into" correct spot prevents jittering
-						movement = input_direction * leash_distance
-						global_position.x = tpos.x + movement.x
-						global_position.z = tpos.z + movement.y
-						
-					else: # camera is not at right spot yet
-					# move the camera towards its appropriate spot
-					# use vector addition to find direction from current camera spot to correct spot
-					# add vector pointing back to vessel and vector of vessel movement to make new direction vector
-						movement = (catchup_direction + input_direction).normalized() * (lead_speed) *0.5
-						# note: i added the * 0.5 to accentuate the vibrating effect the vessel 
-						# gets when it shifts position, you don't actually need it i just thought
-						# it looked cool
-						global_position.x += movement.x * delta
-						global_position.z += movement.y * delta
+				# reset camera to correct spot
+					#movement = (catchup_direction + input_direction).normalized() * (lead_speed) *0.5
+					#global_position.x += movement.x * delta
+					#global_position.z += movement.y * delta
+					movement = input_direction * leash_distance
+					global_position.x = tpos.x + movement.x
+					global_position.z = tpos.z + movement.y
+
 						
 				else: # camera is at leash distance AND in correct spot
 				# continue on path of vessel movement, maintaining leash distance
